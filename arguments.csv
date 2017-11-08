@@ -1,0 +1,2 @@
+#method = (RISE, logRISE, RPLE), regularization coefficient c_lambda, couplings symmetrization = (Y, N), input file, output file
+logRISE, 0.8, Y, samples_histo.csv, reconstructed_couplings.csv
