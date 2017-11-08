@@ -11,23 +11,23 @@ For running the code, you need to have the latest version of Julia installed on 
 
 Specify desired parameters and file names in the arguments.csv file.
 
-Then run the reconstruction algorithm in the command line:
+Then run `Inverse_Ising.jl` in the command line:
 
 ```
 julia Inverse_Ising.jl
 ```
 
-For small systems (e.g. N<=25), samples can be exaustively generated with the Gibbs_Sampler.jl, which can be used as follows:
+For small systems (e.g. N<=25), samples can be exaustively generated with `Gibbs_Sampler.jl`:
 
 ```
 julia Gibbs_Sampler.jl input_adjacency.csv num_samples output_samples.csv
 ```
 
-A small synthetic example of input and output files is provided in the folder "synthetic_example"
+A small synthetic example of input and output files is provided in the folder "synthetic_example".
 
 ## D-Wave data set
 
-The real data set generated on the D-Wave 2X quantum annealer "Ising" at Los Alamos National Laboratory and used in the paper for illustration is available in the folder "data_dwave" 
+The real data set generated on the D-Wave 2X quantum annealer "Ising" at Los Alamos National Laboratory and used in the paper for illustration is available in the folder "data_dwave".
 
 ## License
 
