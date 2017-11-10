@@ -1,3 +1,5 @@
+#!/usr/bin/env julia
+
 ###########
 # Implementation of RISE, logRISE and RPLE algorithms
 # Authors: Andrey Y. Lokhov, Marc Vuffray, Sidhant Misra, Michael Chertkov
