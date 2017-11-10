@@ -1,13 +1,12 @@
 # Inverse Ising
 
 This repository contains Julia implementation of RISE, logRISE and RPLE algorithms for the inverse Ising problem.
-Reference: Andrey Y. Lokhov, Marc Vuffray, Sidhant Misra, Michael Chertkov, "Optimal structure and parameter learning of Ising models" (2017).
 
-### Prerequisites
+## Prerequisites
 
 For running the code, you need to have the latest version of Julia installed on your computer, as well as JuMP, Ipopt and StatsBase packages.
 
-### Running
+## Running
 
 Specify desired parameters and file names in the arguments.csv file: reconstruction method (RISE, logRISE, RPLE), regularization coefficient c_lambda, symmetrization of reconstructed couplings (Y, N), name of the input sample file, name of the output parameters file.
 
@@ -30,6 +29,20 @@ See above for the formats of the adjacency matrix (containing parameters) and of
 ## D-Wave data set
 
 The real data set generated on the D-Wave 2X quantum annealer "Ising" at Los Alamos National Laboratory and used in the paper for illustration is available in the folder "data_dwave".
+
+## Reference
+
+If you find this code useful in your work, we kindly request that you cite the following [paper](https://arxiv.org/abs/1612.05024):
+* A. Y. Lokhov, M. Vuffray, S. Misra, M. Chertkov (2016). Optimal structure and parameter learning of Ising models.
+arXiv preprint arXiv:1612.05024.
+```
+@article{lokhov2016optimal,
+  title={Optimal structure and parameter learning of Ising models},
+  author={Lokhov, Andrey Y and Vuffray, Marc and Misra, Sidhant and Chertkov, Michael},
+  journal={arXiv preprint arXiv:1612.05024},
+  year={2016}
+}
+```
 
 ## License
 
