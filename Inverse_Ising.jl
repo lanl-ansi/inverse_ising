@@ -10,15 +10,22 @@
 using JuMP
 using Ipopt
 
-#reading arguments in the argument file
-args                = readcsv("arguments.csv")
-
 #initialization of arguments (type of method, regularization coefficient, post symmetrization of couplings, input & output files).
-method              = strip(args[1])
-regularizing_value  = args[2]
-symmetrization      = strip(args[3])
-file_samples_histo  = strip(args[4])
-file_reconstruction = strip(args[5])
+if length(ARGS) >= 5
+    method              = strip(ARGS[1])
+    regularizing_value  = parse(Float64, ARGS[2])
+    symmetrization      = strip(ARGS[3])
+    file_samples_histo  = strip(ARGS[4])
+    file_reconstruction = strip(ARGS[5])
+else
+    #reading arguments in the argument file
+    args = readcsv("arguments.csv")
+    method              = strip(args[1])
+    regularizing_value  = args[2]
+    symmetrization      = strip(args[3])
+    file_samples_histo  = strip(args[4])
+    file_reconstruction = strip(args[5])
+end
 
 #Initialization of the histogram of samples and extraction of number of spins and configuarions.
 #Each line of the histogram of samples is in the format "number of time a configuration has been sampled, configuration".
