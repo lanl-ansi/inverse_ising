@@ -59,7 +59,8 @@ for current_spin = 1:num_spins
     #Declaration in JuMP of the optimization model "m" and the convex solver. Here the convex solver is choosen to be Ipopt.
     #The tolerance tol is chosen based on experiments in the paper, remove for using a default tolerance of the solver, e.g. solver = IpoptSolver()
     #The option print_level=0 disables the output of the Ipopt solver, remove for reading a default detailed information on the convergence, e.g. solver = IpoptSolver()
-    m = Model(solver = IpoptSolver(tol=1e-12, print_level=0))
+    #m = Model(solver = IpoptSolver(tol=1e-12, print_level=0))
+    m = Model(solver = IpoptSolver(tol=1e-12))
 
     #Initialization of the loss function for JuMP. RISE is choosen by default unless the user specifies RPLE in the arguments.
     JuMP.register(m, :IIPobjective, 1, (method == "RPLE"? RPLEobjective : RISEobjective), autodiff=true)
@@ -93,6 +94,10 @@ for current_spin = 1:num_spins
     println(current_spin, " = ", getvalue(x))
     reconstruction[current_spin,1:num_spins] = deepcopy(getvalue(x))
 
+    # release memory for next iteration
+    nodal_stat = 0
+    m = 0 
+    gc()
 end
 
 #symmetrization of the couplings. No symmetrization is choosen by defaut unless the user specifies "Y" in the arguments.
