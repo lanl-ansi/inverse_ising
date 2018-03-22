@@ -1,3 +1,5 @@
+#!/usr/bin/env julia
+
 ###########
 # Brute-force generation of samples (in the histogram representation) distributed according to Boltzmann Distribution for small systems
 # Authors: Andrey Y. Lokhov, Marc Vuffray, Sidhant Misra, Michael Chertkov

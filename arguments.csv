@@ -1,2 +1,3 @@
-#method = (RISE, logRISE, RPLE), regularization coefficient c_lambda, couplings symmetrization = (Y, N), input file, output file
-logRISE, 0.8, Y, samples_histo.csv, reconstructed_couplings.csv
+#method=(RISE, RPLE), regularizing parameter, CD_iteration, SGDM_iteration, SGDM_step
+RISE, 0.2, 10, 100000, 0.001
+
