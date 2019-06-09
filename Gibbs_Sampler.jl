@@ -8,9 +8,12 @@
 ###########
 
 using StatsBase
+using CSV
+using DataFrames
+using LinearAlgebra
 
 function int_to_spin(int_representation, spin_number)
-  spin = 2*digits(int_representation, 2, spin_number)-1
+  spin = 2 .* digits(int_representation, base = 2, pad = spin_number) .- 1
   return spin
 end
 
@@ -37,7 +40,7 @@ end
 
 #Reading the input graph adjacency matrix weighted with couplings (off-diagional entries) and magnetic fields (diagonal entries).
 file_adj          = ARGS[1]
-adjacency_matrix  = readcsv(file_adj) #couplings part
+adjacency_matrix  = convert(Matrix{Float64}, CSV.read(file_adj, datarow=1)) #couplings part
 prior_vector      = transpose(diag(adjacency_matrix)) #priors, or magnetic fields part
 
 #Reading number of samples to be generated
@@ -50,4 +53,4 @@ file_samples      = ARGS[3]
 my_sample         = sample_generation(number_sample, adjacency_matrix, prior_vector)
 
 #Writing generated samples in the histogram form: each line of the histogram of samples is in the format "number of time a configuration has been sampled, configuration"
-writecsv(file_samples, my_sample)
+CSV.write(file_samples, DataFrame(my_sample), writeheader=false)
