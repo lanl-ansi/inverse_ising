@@ -7,6 +7,9 @@
 # Example of use: julia Inverse_Ising.jl    
 ###########
 
+using CSV
+using DataFrames
+
 using JuMP
 using Ipopt
 
@@ -18,36 +21,36 @@ if length(ARGS) >= 5
     regularizing_value  = parse(Float64, ARGS[2])
     symmetrization      = strip(ARGS[3])
     file_samples_histo  = strip(ARGS[4])
-    file_reconstruction = strip(ARGS[5])
+    file_reconstruction = "$(strip(ARGS[5]))"
     if length(ARGS) >= 6
-        adjacency = readcsv(ARGS[6])
+        adjacency = convert(Matrix{Float64}, CSV.read(ARGS[6], datarow=1))
     end
 else
     #reading arguments in the argument file
-    args = readcsv("arguments.csv")
+    args = CSV.read("arguments.csv", datarow=1)
     method              = strip(args[1])
     regularizing_value  = args[2]
     symmetrization      = strip(args[3])
     file_samples_histo  = strip(args[4])
-    file_reconstruction = strip(args[5])
+    file_reconstruction = "$(strip(args[5]))"
     if length(args) >= 6
-        adjacency = readcsv(args[6])
+        adjacency = convert(Matrix{Float64}, CSV.read(ARGS[6], datarow=1))
     end
 end
 
 #Initialization of the histogram of samples and extraction of number of spins and configuarions.
 #Each line of the histogram of samples is in the format "number of time a configuration has been sampled, configuration".
-samples_histo       = readcsv(file_samples_histo)
+samples_histo       = convert(Matrix{Float64}, CSV.read(file_samples_histo, datarow=1))
 (num_conf, num_row) = size(samples_histo)
 num_spins           = num_row - 1
 
 #Declaration of the matrix of reconstructed couplings (off-diagional entries) and magnetic fields (diagonal entries).
-reconstruction = Array{Float64}(num_spins, num_spins)
+reconstruction = Array{Float64}(undef, num_spins, num_spins)
 
 #Extraction of the total number of samples contained in the histogram.
 num_samples = 0
 for k=1:num_conf
-  num_samples += samples_histo[k,1]
+    global num_samples += samples_histo[k,1]
 end
 
 #Initialization of the regularizing parameter from regularization coefficient. Declaration of the RPLE and RISE objective funcions.
@@ -67,11 +70,11 @@ for current_spin = 1:num_spins
     #Declaration in JuMP of the optimization model "m" and the convex solver. Here the convex solver is choosen to be Ipopt.
     #The tolerance tol is chosen based on experiments in the paper, remove for using a default tolerance of the solver, e.g. solver = IpoptSolver()
     #The option print_level=0 disables the output of the Ipopt solver, remove for reading a default detailed information on the convergence, e.g. solver = IpoptSolver()
-    #m = Model(solver = IpoptSolver(tol=1e-12, print_level=0))
-    m = Model(solver = IpoptSolver(tol=1e-12))
+    #m = Model(with_optimizer(Ipopt.Optimizer, tol=1e-12, print_level=0))
+    m = Model(with_optimizer(Ipopt.Optimizer, tol=1e-12))
 
     #Initialization of the loss function for JuMP. RISE is choosen by default unless the user specifies RPLE in the arguments.
-    JuMP.register(m, :IIPobjective, 1, (method == "RPLE"? RPLEobjective : RISEobjective), autodiff=true)
+    JuMP.register(m, :IIPobjective, 1, (method == "RPLE" ? RPLEobjective : RISEobjective), autodiff=true)
 
     #Declaration in JuMP of "x", the array of variables for couplings and magnetic fields and "z", the array of slack variables for the l1 norm.
     #The magnetic field variable is x[current_spin] and the coupling variables are x[i] for i!= current_spin. The slack variable z[current_spin] is uneccessary.
@@ -102,14 +105,17 @@ for current_spin = 1:num_spins
     end
 
     #Lauching convex optimization, printing results and updating the matrix of reconstructed parameters accordingly.
-    status = solve(m)
-    println(current_spin, " = ", getvalue(x))
-    reconstruction[current_spin,1:num_spins] = deepcopy(getvalue(x))
+    optimize!(m)
+    spin_values = [JuMP.value(x[i]) for i in 1:num_spins]
+    println(current_spin, " = ", spin_values)
+    for i in 1:num_spins
+        reconstruction[current_spin,i] = spin_values[i]
+    end
 
     # release memory for next iteration
     nodal_stat = 0
-    m = 0 
-    gc()
+    m = 0
+    GC.gc()
 end
 
 #symmetrization of the couplings. No symmetrization is choosen by defaut unless the user specifies "Y" in the arguments.
@@ -117,5 +123,11 @@ if symmetrization == "Y"
     reconstruction = 0.5*(reconstruction + transpose(reconstruction))
 end
 
+println(typeof(reconstruction))
+println(reconstruction)
+
+println(typeof(file_reconstruction))
+println(file_reconstruction)
+
 #ouputing reconstruction in the CSV file
-writecsv(file_reconstruction, reconstruction)
+CSV.write(file_reconstruction, DataFrame(reconstruction), writeheader=false)
