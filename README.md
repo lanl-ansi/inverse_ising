@@ -21,7 +21,7 @@ The input csv sample file should be in the histogram form, where each line is in
 For small systems (e.g. N<=25), samples can be exhaustively generated with `Gibbs_Sampler.jl`:
 
 ```
-julia Gibbs_Sampler.jl input_adjacency.csv <num_samples> output_samples.csv
+julia Gibbs_Sampler.jl synthetic_example/input_adjacency.csv 1000 output_samples.csv
 ```
 
 See above for the formats of the adjacency matrix (containing parameters) and of the output file (containing samples in the histogram representation). A small synthetic example of input and output files is provided in the folder "synthetic_example".
