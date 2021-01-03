@@ -40,7 +40,7 @@ end
 
 #Reading the input graph adjacency matrix weighted with couplings (off-diagional entries) and magnetic fields (diagonal entries).
 file_adj          = ARGS[1]
-adjacency_matrix  = convert(Matrix{Float64}, CSV.read(file_adj, datarow=1)) #couplings part
+adjacency_matrix  = convert(Matrix{Float64}, CSV.read(file_adj, DataFrame, datarow=1)) #couplings part
 prior_vector      = transpose(diag(adjacency_matrix)) #priors, or magnetic fields part
 
 #Reading number of samples to be generated

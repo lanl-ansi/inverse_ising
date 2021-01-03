@@ -23,24 +23,24 @@ if length(ARGS) >= 5
     file_samples_histo  = strip(ARGS[4])
     file_reconstruction = "$(strip(ARGS[5]))"
     if length(ARGS) >= 6
-        adjacency = convert(Matrix{Float64}, CSV.read(ARGS[6], datarow=1))
+        adjacency = convert(Matrix{Float64}, CSV.read(ARGS[6], DataFrame, datarow=1))
     end
 else
     #reading arguments in the argument file
-    args = CSV.read("arguments.csv", datarow=1)
+    args = CSV.read("arguments.csv", DataFrame, datarow=1)
     method              = strip(args[1])
     regularizing_value  = args[2]
     symmetrization      = strip(args[3])
     file_samples_histo  = strip(args[4])
     file_reconstruction = "$(strip(args[5]))"
     if length(args) >= 6
-        adjacency = convert(Matrix{Float64}, CSV.read(ARGS[6], datarow=1))
+        adjacency = convert(Matrix{Float64}, CSV.read(ARGS[6], DataFrame, datarow=1))
     end
 end
 
 #Initialization of the histogram of samples and extraction of number of spins and configuarions.
 #Each line of the histogram of samples is in the format "number of time a configuration has been sampled, configuration".
-samples_histo       = convert(Matrix{Float64}, CSV.read(file_samples_histo, datarow=1))
+samples_histo       = convert(Matrix{Float64}, CSV.read(file_samples_histo, DataFrame, datarow=1))
 (num_conf, num_row) = size(samples_histo)
 num_spins           = num_row - 1
 

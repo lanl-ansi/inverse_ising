@@ -4,7 +4,7 @@ This repository contains Julia implementation of RISE, logRISE and RPLE algorith
 
 ## Prerequisites
 
-For running the code, you need to have the latest version of Julia installed on your computer, as well as JuMP, Ipopt and StatsBase packages.
+For running the code, you need to have Julia installed on your computer, as well as the Julia packages JuMP, Ipopt and StatsBase packages. The code includes `Project.toml` and `Manifest.toml` files that can be used to configure a Julia environment that the code was tested with.
 
 ## Running
 
@@ -13,15 +13,15 @@ Specify desired parameters and file names in the arguments.csv file: reconstruct
 Then run `Inverse_Ising.jl` in the command line:
 
 ```
-julia Inverse_Ising.jl
+julia Inverse_Ising.jl RISE 0.0 N synthetic_example/output_samples.csv output_model.csv
 ```
 
-The input csv sample file should be in the histogram form, where each line is in the format "number of time a configuration has been sampled, configuration". The output file of reconstructed parameters has the form of a csv matrix that inculdes couplings (as off-diagional entries) and magnetic fields (as diagonal entries).
+The input csv sample file should be in the histogram form, where each line is in the format "number of time a configuration has been sampled, configuration". The output file of reconstructed parameters has the form of a csv matrix that includes couplings (as off-diagonal entries) and magnetic fields (as diagonal entries).
 
-For small systems (e.g. N<=25), samples can be exaustively generated with `Gibbs_Sampler.jl`:
+For small systems (e.g. N<=25), samples can be exhaustively generated with `Gibbs_Sampler.jl`:
 
 ```
-julia Gibbs_Sampler.jl input_adjacency.csv num_samples output_samples.csv
+julia Gibbs_Sampler.jl input_adjacency.csv <num_samples> output_samples.csv
 ```
 
 See above for the formats of the adjacency matrix (containing parameters) and of the output file (containing samples in the histogram representation). A small synthetic example of input and output files is provided in the folder "synthetic_example".
